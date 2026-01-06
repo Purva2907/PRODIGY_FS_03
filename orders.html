@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - PanvelEats</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dark-mode.css" id="dark-mode-style" disabled>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .orders-hero {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+        
+        .order-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+        
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        .order-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-preparing {
+            background: #cce5ff;
+            color: #004085;
+        }
+        
+        .status-ontheway {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-delivered {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .order-items img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .no-orders {
+            text-align: center;
+            padding: 50px 20px;
+        }
+        
+        .no-orders i {
+            font-size: 4rem;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar (Same as index.html) -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-utensils me-2"></i>
+                <span class="brand-name">PanvelEats</span>
+            </a>
+            
+            <!-- Dark/Light Mode Toggle -->
+            <div class="mode-toggle me-3">
+                <button id="dark-mode-toggle" class="btn btn-sm">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#food-categories">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="orders.html">My Orders</a>
+                    </li>
+                </ul>
+                
+                <!-- Cart & User -->
+                <div class="d-flex align-items-center">
+                    <a href="cart.html" class="position-relative me-3 cart-icon">
+                        <i class="fas fa-shopping-cart fa-lg"></i>
+                        <span class="cart-count-badge">0</span>
+                    </a>
+                    
+                    <div class="dropdown">
+                        <button class="btn btn-user dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-2"></i>
+                            <span id="username-display">Guest</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="orders.html"><i class="fas fa-history me-2"></i>Order History</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="login.html" id="logout-link"><i class="fas fa-sign-out-alt me-2"></i>Login/Signup</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Orders Hero -->
+    <section class="orders-hero">
+        <div class="container">
+            <h1 class="display-5 fw-bold mb-3">My Orders</h1>
+            <p class="lead">Track your food delivery orders</p>
+        </div>
+    </section>
+
+    <!-- Orders Content -->
+    <section class="py-5">
+        <div class="container">
+            <!-- Order Filters -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h5 class="mb-0">Order History</h5>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex gap-2 justify-content-md-end">
+                                        <select class="form-select" id="status-filter" style="max-width: 200px;">
+                                            <option value="all">All Status</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="preparing">Preparing</option>
+                                            <option value="ontheway">On the Way</option>
+                                            <option value="delivered">Delivered</option>
+                                            <option value="cancelled">Cancelled</option>
+                                        </select>
+                                        <select class="form-select" id="time-filter" style="max-width: 200px;">
+                                            <option value="all">All Time</option>
+                                            <option value="week">Last Week</option>
+                                            <option value="month">Last Month</option>
+                                            <option value="3months">Last 3 Months</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Orders List -->
+            <div id="orders-container">
+                <!-- Orders will be loaded here -->
+                <div class="no-orders" id="no-orders">
+                    <i class="fas fa-shopping-bag"></i>
+                    <h3>No Orders Yet</h3>
+                    <p class="text-muted">You haven't placed any orders yet.</p>
+                    <a href="index.html" class="btn btn-primary-custom">Order Now</a>
+                </div>
+            </div>
+            
+            <!-- Order Details Modal -->
+            <div class="modal fade" id="orderDetailsModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Order Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body" id="order-details-content">
+                            <!-- Order details will be loaded here -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (Same as index.html) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h4><i class="fas fa-utensils me-2"></i>PanvelEats</h4>
+                    <p>Delivering delicious food across Panvel, Navi Mumbai since 2023.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="index.html#food-categories">Categories</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5>Information</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="login.html">Login / Register</a></li>
+                        <li><a href="cart.html">My Cart</a></li>
+                        <li><a href="orders.html">Order History</a></li>
+                        <li><a href="profile.html">My Profile</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h5>Contact Us</h5>
+                    <ul class="list-unstyled contact-info">
+                        <li><i class="fas fa-map-marker-alt"></i> Panvel, Navi Mumbai, Maharashtra, India</li>
+                        <li><i class="fas fa-phone"></i> +91 98765 43210</li>
+                        <li><i class="fas fa-envelope"></i> info@panveleats.com</li>
+                        <li><i class="fas fa-clock"></i> 8:00 AM - 12:00 AM</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p>&copy; 2023 PanvelEats. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p>Made with <i class="fas fa-heart text-danger"></i> for food lovers in Panvel</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        // Orders page functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check login status
+            const isLoggedIn = checkLoginStatus();
+            if (!isLoggedIn) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            updateUIForLoginStatus(isLoggedIn);
+            updateCartCount();
+            initializeDarkMode();
+            loadOrders();
+            setupOrderFilters();
+        });
+        
+        function checkLoginStatus() {
+            const user = JSON.parse(localStorage.getItem('panvelEatsUser'));
+            return user && user.isLoggedIn;
+        }
+        
+        function updateUIForLoginStatus(isLoggedIn) {
+            const usernameDisplay = document.getElementById('username-display');
+            const logoutLink = document.getElementById('logout-link');
+            
+            if (isLoggedIn) {
+                const user = JSON.parse(localStorage.getItem('panvelEatsUser'));
+                if (user) {
+                    usernameDisplay.textContent = user.name.split(' ')[0];
+                }
+                logoutLink.innerHTML = '<i class="fas fa-sign-out-alt me-2"></i>Logout';
+                logoutLink.href = '#';
+                logoutLink.onclick = handleLogout;
+            } else {
+                usernameDisplay.textContent = 'Guest';
+                logoutLink.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Login/Signup';
+                logoutLink.href = 'login.html';
+                logoutLink.onclick = null;
+            }
+        }
+        
+        function handleLogout(e) {
+            e.preventDefault();
+            localStorage.removeItem('panvelEatsUser');
+            localStorage.removeItem('panvelEatsCart');
+            alert('Logged out successfully');
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1000);
+        }
+        
+        function updateCartCount() {
+            const cartCountBadge = document.querySelector('.cart-count-badge');
+            const cart = JSON.parse(localStorage.getItem('panvelEatsCart')) || [];
+            
+            let totalItems = 0;
+            cart.forEach(item => {
+                totalItems += item.quantity;
+            });
+            
+            if (cartCountBadge) {
+                cartCountBadge.textContent = totalItems;
+                cartCountBadge.style.display = totalItems > 0 ? 'flex' : 'none';
+            }
+        }
+        
+        function initializeDarkMode() {
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const darkModeStyle = document.getElementById('dark-mode-style');
+            
+            if (!darkModeToggle || !darkModeStyle) return;
+            
+            const isDarkMode = localStorage.getItem('panvelEatsDarkMode') === 'true';
+            
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                darkModeStyle.disabled = false;
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            
+            darkModeToggle.addEventListener('click', function() {
+                const isDark = document.body.classList.toggle('dark-mode');
+                
+                if (isDark) {
+                    darkModeStyle.disabled = false;
+                    localStorage.setItem('panvelEatsDarkMode', 'true');
+                    this.innerHTML = '<i class="fas fa-sun"></i>';
+                } else {
+                    darkModeStyle.disabled = true;
+                    localStorage.setItem('panvelEatsDarkMode', 'false');
+                    this.innerHTML = '<i class="fas fa-moon"></i>';
+                }
+            });
+        }
+        
+        function loadOrders() {
+            const orders = JSON.parse(localStorage.getItem('panvelEatsOrders')) || [];
+            const ordersContainer = document.getElementById('orders-container');
+            const noOrders = document.getElementById('no-orders');
+            
+            if (orders.length === 0) {
+                noOrders.style.display = 'block';
+                ordersContainer.innerHTML = '';
+                ordersContainer.appendChild(noOrders);
+                return;
+            }
+            
+            noOrders.style.display = 'none';
+            ordersContainer.innerHTML = '';
+            
+            orders.forEach(order => {
+                const orderCard = createOrderCard(order);
+                ordersContainer.appendChild(orderCard);
+            });
+        }
+        
+        function createOrderCard(order) {
+            const col = document.createElement('div');
+            col.className = 'col-12 mb-3';
+            
+            const date = new Date(order.date);
+            const formattedDate = date.toLocaleDateString('en-IN', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            const statusClass = getStatusClass(order.status);
+            const statusText = getStatusText(order.status);
+            
+            // Count total items
+            let totalItems = 0;
+            order.items.forEach(item => {
+                totalItems += item.quantity;
+            });
+            
+            col.innerHTML = `
+                <div class="order-card">
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <h6 class="mb-1">Order #${order.id}</h6>
+                            <small class="text-muted">${formattedDate}</small>
+                        </div>
+                        <div class="col-md-2">
+                            <span class="order-status ${statusClass}">${statusText}</span>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="order-items">
+                                <small>${totalItems} items • ₹${order.total.toFixed(2)}</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <small class="text-muted">${order.paymentMethod}</small>
+                        </div>
+                        <div class="col-md-2 text-md-end">
+                            <button class="btn btn-sm btn-outline-primary view-order-btn" data-order-id="${order.id}">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add event listener to view details button
+            col.querySelector('.view-order-btn').addEventListener('click', function() {
+                showOrderDetails(order.id);
+            });
+            
+            return col;
+        }
+        
+        function getStatusClass(status) {
+            switch(status.toLowerCase()) {
+                case 'pending': return 'status-pending';
+                case 'preparing': return 'status-preparing';
+                case 'ontheway': return 'status-ontheway';
+                case 'delivered': return 'status-delivered';
+                case 'cancelled': return 'status-cancelled';
+                default: return 'status-pending';
+            }
+        }
+        
+        function getStatusText(status) {
+            switch(status.toLowerCase()) {
+                case 'pending': return 'Pending';
+                case 'preparing': return 'Preparing';
+                case 'ontheway': return 'On the Way';
+                case 'delivered': return 'Delivered';
+                case 'cancelled': return 'Cancelled';
+                default: return status;
+            }
+        }
+        
+        function showOrderDetails(orderId) {
+            const orders = JSON.parse(localStorage.getItem('panvelEatsOrders')) || [];
+            const order = orders.find(o => o.id === orderId);
+            
+            if (!order) return;
+            
+            const modalContent = document.getElementById('order-details-content');
+            const date = new Date(order.date);
+            const formattedDate = date.toLocaleDateString('en-IN', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            const statusClass = getStatusClass(order.status);
+            const statusText = getStatusText(order.status);
+            
+            // Build items list HTML
+            let itemsHtml = '';
+            order.items.forEach(item => {
+                itemsHtml += `
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="${item.image}" alt="${item.name}" class="me-3" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0">${item.name}</h6>
+                            <small class="text-muted">Quantity: ${item.quantity}</small>
+                        </div>
+                        <div>₹${(item.price * item.quantity).toFixed(2)}</div>
+                    </div>
+                `;
+            });
+            
+            modalContent.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Order Information</h6>
+                        <p><strong>Order ID:</strong> #${order.id}</p>
+                        <p><strong>Order Date:</strong> ${formattedDate}</p>
+                        <p><strong>Status:</strong> <span class="order-status ${statusClass}">${statusText}</span></p>
+                        <p><strong>Payment Method:</strong> ${order.paymentMethod}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Delivery Address</h6>
+                        <p>${order.deliveryAddress}</p>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <h6>Order Items</h6>
+                <div class="mb-4">
+                    ${itemsHtml}
+                </div>
+                
+                <hr>
+                
+                <div class="row">
+                    <div class="col-md-6 offset-md-6">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <span>₹${order.subtotal.toFixed(2)}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Delivery Fee:</span>
+                            <span>₹${order.deliveryFee.toFixed(2)}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tax (5%):</span>
+                            <span>₹${order.tax.toFixed(2)}</span>
+                        </div>
+                        ${order.discount > 0 ? `
+                        <div class="d-flex justify-content-between mb-2 text-success">
+                            <span>Discount:</span>
+                            <span>-₹${order.discount.toFixed(2)}</span>
+                        </div>
+                        ` : ''}
+                        <div class="d-flex justify-content-between mt-3 pt-2 border-top">
+                            <strong>Total:</strong>
+                            <strong>₹${order.total.toFixed(2)}</strong>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
+            modal.show();
+        }
+        
+        function setupOrderFilters() {
+            const statusFilter = document.getElementById('status-filter');
+            const timeFilter = document.getElementById('time-filter');
+            
+            if (statusFilter) {
+                statusFilter.addEventListener('change', filterOrders);
+            }
+            
+            if (timeFilter) {
+                timeFilter.addEventListener('change', filterOrders);
+            }
+        }
+        
+        function filterOrders() {
+            const statusFilter = document.getElementById('status-filter').value;
+            const timeFilter = document.getElementById('time-filter').value;
+            const orders = JSON.parse(localStorage.getItem('panvelEatsOrders')) || [];
+            
+            let filteredOrders = orders;
+            
+            // Filter by status
+            if (statusFilter !== 'all') {
+                filteredOrders = filteredOrders.filter(order => 
+                    order.status.toLowerCase() === statusFilter.toLowerCase()
+                );
+            }
+            
+            // Filter by time
+            if (timeFilter !== 'all') {
+                const now = new Date();
+                let cutoffDate;
+                
+                switch(timeFilter) {
+                    case 'week':
+                        cutoffDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                        break;
+                    case 'month':
+                        cutoffDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+                        break;
+                    case '3months':
+                        cutoffDate = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+                        break;
+                }
+                
+                filteredOrders = filteredOrders.filter(order => {
+                    const orderDate = new Date(order.date);
+                    return orderDate >= cutoffDate;
+                });
+            }
+            
+            // Display filtered orders
+            const ordersContainer = document.getElementById('orders-container');
+            const noOrders = document.getElementById('no-orders');
+            
+            if (filteredOrders.length === 0) {
+                noOrders.style.display = 'block';
+                ordersContainer.innerHTML = '';
+                ordersContainer.appendChild(noOrders);
+                return;
+            }
+            
+            noOrders.style.display = 'none';
+            ordersContainer.innerHTML = '';
+            
+            filteredOrders.forEach(order => {
+                const orderCard = createOrderCard(order);
+                ordersContainer.appendChild(orderCard);
+            });
+        }
+    </script>
+</body>
+</html>

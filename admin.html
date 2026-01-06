@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - PanvelEats</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dark-mode.css" id="dark-mode-style" disabled>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .admin-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 250px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding-top: 20px;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+        
+        .admin-main {
+            margin-left: 250px;
+            padding: 20px;
+            transition: var(--transition);
+        }
+        
+        .admin-header {
+            background: white;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidebar-brand {
+            text-align: center;
+            padding: 20px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 4px solid var(--highlight-color);
+        }
+        
+        .sidebar-menu i {
+            width: 25px;
+            margin-right: 10px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-title {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+        
+        .admin-table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .table-responsive {
+            border-radius: 10px;
+        }
+        
+        .admin-table th {
+            background: var(--light-bg);
+            border: none;
+            padding: 15px;
+            font-weight: 600;
+        }
+        
+        .admin-table td {
+            padding: 15px;
+            vertical-align: middle;
+        }
+        
+        .order-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .btn-admin {
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .admin-section {
+            display: none;
+        }
+        
+        .admin-section.active {
+            display: block;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .admin-sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+            
+            .admin-sidebar.show {
+                width: 250px;
+            }
+            
+            .admin-main {
+                margin-left: 0;
+            }
+            
+            .sidebar-toggle {
+                display: block !important;
+            }
+        }
+        
+        .sidebar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Sidebar -->
+    <div class="admin-sidebar" id="admin-sidebar">
+        <div class="sidebar-brand">
+            <h4><i class="fas fa-utensils me-2"></i>PanvelEats</h4>
+            <small class="text-light">Admin Panel</small>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li>
+                <a href="#dashboard" class="active" data-section="dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="#orders" data-section="orders">
+                    <i class="fas fa-shopping-bag"></i> Orders
+                </a>
+            </li>
+            <li>
+                <a href="#food-items" data-section="food-items">
+                    <i class="fas fa-utensils"></i> Food Items
+                </a>
+            </li>
+            <li>
+                <a href="#customers" data-section="customers">
+                    <i class="fas fa-users"></i> Customers
+                </a>
+            </li>
+            <li>
+                <a href="#restaurants" data-section="restaurants">
+                    <i class="fas fa-store"></i> Restaurants
+                </a>
+            </li>
+            <li>
+                <a href="#analytics" data-section="analytics">
+                    <i class="fas fa-chart-line"></i> Analytics
+                </a>
+            </li>
+            <li>
+                <a href="#settings" data-section="settings">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </li>
+        </ul>
+        
+        <div class="sidebar-footer" style="position: absolute; bottom: 20px; width: 100%; padding: 20px;">
+            <a href="index.html" class="btn btn-outline-light btn-sm w-100">
+                <i class="fas fa-sign-out-alt me-2"></i>Back to Store
+            </a>
+        </div>
+    </div>
+
+    <!-- Admin Main Content -->
+    <div class="admin-main" id="admin-main">
+        <!-- Header -->
+        <div class="admin-header">
+            <div>
+                <button class="sidebar-toggle" id="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h4 class="mb-0" id="page-title">Dashboard</h4>
+            </div>
+            
+            <div class="d-flex align-items-center gap-3">
+                <div class="mode-toggle">
+                    <button id="dark-mode-toggle" class="btn btn-sm">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle me-2"></i>Admin User
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="index.html"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <section class="admin-section active" id="dashboard-section">
+            <div class="container-fluid pt-4">
+                <!-- Stats Cards -->
+                <div class="row mb-4">
+                    <div class="col-xl-3 col-lg-6 mb-4">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(69, 6, 147, 0.1); color: var(--primary-color);">
+                                <i class="fas fa-shopping-bag"></i>
+                            </div>
+                            <div class="stat-number" id="total-orders-count">0</div>
+                            <div class="stat-title">Total Orders</div>
+                            <small class="text-success" id="orders-growth">+12% from last month</small>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3 col-lg-6 mb-4">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(140, 0, 255, 0.1); color: var(--secondary-color);">
+                                <i class="fas fa-rupee-sign"></i>
+                            </div>
+                            <div class="stat-number" id="total-revenue">₹0</div>
+                            <div class="stat-title">Total Revenue</div>
+                            <small class="text-success" id="revenue-growth">+18% from last month</small>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3 col-lg-6 mb-4">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(255, 63, 127, 0.1); color: var(--accent-color);">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-number" id="total-customers">0</div>
+                            <div class="stat-title">Total Customers</div>
+                            <small class="text-success" id="customers-growth">+8% from last month</small>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3 col-lg-6 mb-4">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(255, 196, 0, 0.1); color: var(--highlight-color);">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                            <div class="stat-number" id="total-items">0</div>
+                            <div class="stat-title">Food Items</div>
+                            <small class="text-success" id="items-growth">+5% from last month</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Charts -->
+                <div class="row mb-4">
+                    <div class="col-lg-8">
+                        <div class="chart-container">
+                            <h5>Revenue Overview</h5>
+                            <div id="revenue-chart" style="height: 300px;">
+                                <!-- Chart will be created with CSS -->
+                                <div class="chart-placeholder">
+                                    <div class="text-center py-5">
+                                        <p class="text-muted">Revenue chart would appear here</p>
+                                        <p><small>In a real application, this would show revenue trends over time</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="chart-container">
+                            <h5>Order Status</h5>
+                            <div id="order-status-chart" style="height: 300px;">
+                                <!-- Chart will be created with CSS -->
+                                <div class="chart-placeholder">
+                                    <div class="text-center py-5">
+                                        <p class="text-muted">Order status chart would appear here</p>
+                                        <p><small>In a real application, this would show order status distribution</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Orders -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="admin-table">
+                            <div class="table-header p-3 border-bottom">
+                                <h5 class="mb-0">Recent Orders</h5>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>Customer</th>
+                                            <th>Date</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recent-orders-table">
+                                        <!-- Recent orders will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Orders Section -->
+        <section class="admin-section" id="orders-section">
+            <div class="container-fluid pt-4">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">All Orders</h5>
+                                    <div class="d-flex gap-2">
+                                        <input type="text" class="form-control" placeholder="Search orders..." style="max-width: 250px;">
+                                        <select class="form-select" style="max-width: 150px;">
+                                            <option>All Status</option>
+                                            <option>Pending</option>
+                                            <option>Preparing</option>
+                                            <option>On the Way</option>
+                                            <option>Delivered</option>
+                                            <option>Cancelled</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="admin-table">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>Customer</th>
+                                            <th>Items</th>
+                                            <th>Date</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="all-orders-table">
+                                        <!-- All orders will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Food Items Section -->
+        <section class="admin-section" id="food-items-section">
+            <div class="container-fluid pt-4">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Food Items Management</h5>
+                                    <button class="btn btn-primary" id="add-food-item-btn">
+                                        <i class="fas fa-plus me-2"></i>Add New Item
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="admin-table">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Image</th>
+                                            <th>Name</th>
+                                            <th>Category</th>
+                                            <th>Price</th>
+                                            <th>Rating</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="food-items-table">
+                                        <!-- Food items will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Customers Section -->
+        <section class="admin-section" id="customers-section">
+            <div class="container-fluid pt-4">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Customers</h5>
+                                    <input type="text" class="form-control" placeholder="Search customers..." style="max-width: 300px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="admin-table">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Orders</th>
+                                            <th>Total Spent</th>
+                                            <th>Join Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="customers-table">
+                                        <!-- Customers will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Restaurants Section -->
+        <section class="admin-section" id="restaurants-section">
+            <div class="container-fluid pt-4">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Restaurant Partners</h5>
+                                    <button class="btn btn-primary">
+                                        <i class="fas fa-plus me-2"></i>Add Restaurant
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="admin-table">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Cuisine</th>
+                                            <th>Rating</th>
+                                            <th>Orders</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="restaurants-table">
+                                        <!-- Restaurants will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section class="admin-section" id="analytics-section">
+            <div class="container-fluid pt-4">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="mb-0">Analytics & Reports</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <div class="chart-container">
+                            <h5>Top Categories</h5>
+                            <div style="height: 300px;">
+                                <div class="chart-placeholder">
+                                    <div class="text-center py-5">
+                                        <p class="text-muted">Category analytics would appear here</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6 mb-4">
+                        <div class="chart-container">
+                            <h5>Customer Demographics</h5>
+                            <div style="height: 300px;">
+                                <div class="chart-placeholder">
+                                    <div class="text-center py-5">
+                                        <p class="text-muted">Demographics chart would appear here</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="chart-container">
+                            <h5>Monthly Report</h5>
+                            <div style="height: 400px;">
+                                <div class="chart-placeholder">
+                                    <div class="text-center py-5">
+                                        <p class="text-muted">Monthly report charts would appear here</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section class="admin-section" id="settings-section">
+            <div class="container-fluid pt-4">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="mb-0">Settings</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="mb-4">General Settings</h6>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Store Name</label>
+                                    <input type="text" class="form-control" value="PanvelEats">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Store Address</label>
+                                    <textarea class="form-control" rows="3">Panvel, Navi Mumbai, Maharashtra, India</textarea>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Contact Email</label>
+                                    <input type="email" class="form-control" value="admin@panveleats.com">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Contact Phone</label>
+                                    <input type="text" class="form-control" value="+91 98765 43210">
+                                </div>
+                                
+                                <button class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="mb-4">Delivery Settings</h6>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Delivery Radius (km)</label>
+                                    <input type="number" class="form-control" value="10">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Delivery Fee</label>
+                                    <input type="number" class="form-control" value="40">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Free Delivery Above (₹)</label>
+                                    <input type="number" class="form-control" value="500">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Estimated Delivery Time (minutes)</label>
+                                    <input type="number" class="form-control" value="30">
+                                </div>
+                                
+                                <button class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        // Admin Dashboard functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize dark mode
+            initializeDarkMode();
+            
+            // Setup sidebar navigation
+            setupSidebarNavigation();
+            
+            // Load dashboard data
+            loadDashboardData();
+            
+            // Load orders data
+            loadOrdersData();
+            
+            // Load food items data
+            loadFoodItemsData();
+            
+            // Load customers data
+            loadCustomersData();
+            
+            // Load restaurants data
+            loadRestaurantsData();
+            
+            // Setup sidebar toggle for mobile
+            setupSidebarToggle();
+        });
+        
+        function initializeDarkMode() {
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const darkModeStyle = document.getElementById('dark-mode-style');
+            
+            if (!darkModeToggle || !darkModeStyle) return;
+            
+            const isDarkMode = localStorage.getItem('panvelEatsDarkMode') === 'true';
+            
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                darkModeStyle.disabled = false;
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            
+            darkModeToggle.addEventListener('click', function() {
+                const isDark = document.body.classList.toggle('dark-mode');
+                
+                if (isDark) {
+                    darkModeStyle.disabled = false;
+                    localStorage.setItem('panvelEatsDarkMode', 'true');
+                    this.innerHTML = '<i class="fas fa-sun"></i>';
+                } else {
+                    darkModeStyle.disabled = true;
+                    localStorage.setItem('panvelEatsDarkMode', 'false');
+                    this.innerHTML = '<i class="fas fa-moon"></i>';
+                }
+            });
+        }
+        
+        function setupSidebarNavigation() {
+            const sidebarLinks = document.querySelectorAll('.sidebar-menu a');
+            const pageTitle = document.getElementById('page-title');
+            
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links
+                    sidebarLinks.forEach(l => l.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Hide all sections
+                    document.querySelectorAll('.admin-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Show selected section
+                    const sectionId = this.getAttribute('data-section') + '-section';
+                    document.getElementById(sectionId).classList.add('active');
+                    
+                    // Update page title
+                    const sectionName = this.getAttribute('data-section');
+                    pageTitle.textContent = sectionName.charAt(0).toUpperCase() + sectionName.slice(1);
+                    
+                    // Close sidebar on mobile
+                    if (window.innerWidth < 992) {
+                        document.getElementById('admin-sidebar').classList.remove('show');
+                    }
+                });
+            });
+        }
+        
+        function setupSidebarToggle() {
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('admin-sidebar');
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('show');
+                });
+            }
+        }
+        
+        function loadDashboardData() {
+            // Get orders data
+            const orders = JSON.parse(localStorage.getItem('panvelEatsOrders')) || [];
+            const totalOrders = orders.length;
+            
+            // Calculate total revenue
+            let totalRevenue = 0;
+            orders.forEach(order => {
+                totalRevenue += order.total;
+            });
+            
+            // Get customers data
+            const users = JSON.parse(localStorage.getItem('panvelEatsUsers')) || [];
+            const totalCustomers = users.length;
+            
+            // Get food items data
+            const foodItems = JSON.parse(localStorage.getItem('panvelEatsFoodItems')) || [];
+            const totalItems = foodItems.length;
+            
+            // Update stats
+            document.getElementById('total-orders-count').textContent = totalOrders;
+            document.getElementById('total-revenue').textContent = '₹' + totalRevenue.toFixed(0);
+            document.getElementById('total-customers').textContent = totalCustomers;
+            document.getElementById('total-items').textContent = totalItems || 100; // Fallback to 100 if no data
+            
+            // Load recent orders
+            loadRecentOrders(orders.slice(0, 5));
+        }
+        
+        function loadRecentOrders(orders) {
+            const tableBody = document.getElementById('recent-orders-table');
+            if (!tableBody) return;
+            
+            tableBody.innerHTML = '';
+            
+            if (orders.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">
+                            No orders yet
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            orders.forEach(order => {
+                const date = new Date(order.date);
+                const formattedDate = date.toLocaleDateString('en-IN');
+                
+                // Count total items
+                let totalItems = 0;
+                order.items.forEach(item => {
+                    totalItems += item.quantity;
+                });
+                
+                const statusClass = getStatusClass(order.status);
+                const statusText = getStatusText(order.status);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>#${order.id}</td>
+                    <td>Customer ${order.id % 100}</td>
+                    <td>${formattedDate}</td>
+                    <td>₹${order.total.toFixed(2)}</td>
+                    <td><span class="order-status ${statusClass}">${statusText}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary">View</button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function loadOrdersData() {
+            const orders = JSON.parse(localStorage.getItem('panvelEatsOrders')) || [];
+            const tableBody = document.getElementById('all-orders-table');
+            
+            if (!tableBody) return;
+            
+            tableBody.innerHTML = '';
+            
+            if (orders.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-4 text-muted">
+                            No orders yet
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            orders.forEach(order => {
+                const date = new Date(order.date);
+                const formattedDate = date.toLocaleDateString('en-IN');
+                
+                // Count total items
+                let totalItems = 0;
+                order.items.forEach(item => {
+                    totalItems += item.quantity;
+                });
+                
+                const statusClass = getStatusClass(order.status);
+                const statusText = getStatusText(order.status);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>#${order.id}</td>
+                    <td>Customer ${order.id % 100}</td>
+                    <td>${totalItems} items</td>
+                    <td>${formattedDate}</td>
+                    <td>₹${order.total.toFixed(2)}</td>
+                    <td><span class="order-status ${statusClass}">${statusText}</span></td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-primary">View</button>
+                            <button class="btn btn-outline-success">Update</button>
+                        </div>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function loadFoodItemsData() {
+            // Use the food items from the main data file
+            const tableBody = document.getElementById('food-items-table');
+            
+            if (!tableBody) return;
+            
+            tableBody.innerHTML = '';
+            
+            // Generate sample data if no food items in localStorage
+            const sampleFoodItems = [
+                { id: 1, name: "Butter Chicken", category: "Indian", price: 320, rating: 4.7 },
+                { id: 2, name: "Paneer Tikka Masala", category: "Indian", price: 280, rating: 4.5 },
+                { id: 3, name: "Hakka Noodles", category: "Chinese", price: 180, rating: 4.5 },
+                { id: 4, name: "Pepperoni Pizza", category: "Fast Food", price: 350, rating: 4.6 },
+                { id: 5, name: "Chocolate Brownie", category: "Desserts", price: 120, rating: 4.8 }
+            ];
+            
+            sampleFoodItems.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.id}</td>
+                    <td>
+                        <div style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 5px;"></div>
+                    </td>
+                    <td>${item.name}</td>
+                    <td><span class="badge bg-primary">${item.category}</span></td>
+                    <td>₹${item.price}</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <span class="me-2">${item.rating}</span>
+                            <div style="color: var(--highlight-color);">
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-primary">Edit</button>
+                            <button class="btn btn-outline-danger">Delete</button>
+                        </div>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function loadCustomersData() {
+            const users = JSON.parse(localStorage.getItem('panvelEatsUsers')) || [];
+            const orders = JSON.parse(localStorage.getItem('panvelEatsOrders')) || [];
+            const tableBody = document.getElementById('customers-table');
+            
+            if (!tableBody) return;
+            
+            tableBody.innerHTML = '';
+            
+            if (users.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center py-4 text-muted">
+                            No customers yet
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            // Take first 10 users for display
+            users.slice(0, 10).forEach(user => {
+                // Count user's orders
+                const userOrders = orders.filter(order => {
+                    // In a real app, orders would have user ID
+                    return true; // Simplified for demo
+                });
+                
+                // Calculate total spent
+                let totalSpent = 0;
+                userOrders.forEach(order => {
+                    totalSpent += order.total;
+                });
+                
+                const joinDate = new Date(user.createdAt || Date.now());
+                const formattedDate = joinDate.toLocaleDateString('en-IN');
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.phone || 'N/A'}</td>
+                    <td>${userOrders.length}</td>
+                    <td>₹${totalSpent.toFixed(2)}</td>
+                    <td>${formattedDate}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary">View</button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function loadRestaurantsData() {
+            const tableBody = document.getElementById('restaurants-table');
+            
+            if (!tableBody) return;
+            
+            tableBody.innerHTML = '';
+            
+            // Sample restaurant data
+            const restaurants = [
+                { id: 1, name: "Spice Garden", cuisine: "Indian", rating: 4.7, orders: 1250, status: "Active" },
+                { id: 2, name: "Dragon Palace", cuisine: "Chinese", rating: 4.5, orders: 980, status: "Active" },
+                { id: 3, name: "Burger Junction", cuisine: "Fast Food", rating: 4.3, orders: 1560, status: "Active" },
+                { id: 4, name: "Sweet Tooth", cuisine: "Desserts", rating: 4.8, orders: 750, status: "Active" },
+                { id: 5, name: "Street Bites", cuisine: "Street Food", rating: 4.6, orders: 2100, status: "Active" }
+            ];
+            
+            restaurants.forEach(restaurant => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${restaurant.id}</td>
+                    <td>${restaurant.name}</td>
+                    <td><span class="badge bg-info">${restaurant.cuisine}</span></td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <span class="me-2">${restaurant.rating}</span>
+                            <div style="color: var(--highlight-color);">
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${restaurant.orders}</td>
+                    <td><span class="badge bg-success">${restaurant.status}</span></td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-primary">Edit</button>
+                            <button class="btn btn-outline-danger">Suspend</button>
+                        </div>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function getStatusClass(status) {
+            switch(status.toLowerCase()) {
+                case 'pending': return 'status-pending';
+                case 'preparing': return 'status-preparing';
+                case 'ontheway': return 'status-ontheway';
+                case 'delivered': return 'status-delivered';
+                case 'cancelled': return 'status-cancelled';
+                default: return 'status-pending';
+            }
+        }
+        
+        function getStatusText(status) {
+            switch(status.toLowerCase()) {
+                case 'pending': return 'Pending';
+                case 'preparing': return 'Preparing';
+                case 'ontheway': return 'On the Way';
+                case 'delivered': return 'Delivered';
+                case 'cancelled': return 'Cancelled';
+                default: return status;
+            }
+        }
+    </script>
+</body>
+</html>
