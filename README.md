@@ -76,9 +76,13 @@ If you use any libraries (e.g., Bootstrap, jQuery), document them here.
 📌 Future Enhancements
 
 ✅ Connect with a back-end API for dynamic content
+
 ✅ Add user authentication & session management
+
 ✅ Integrate product database
+
 ✅ Implement checkout & payment flow
+
 --------------------------------------------------------------------------------------------------------------------------------------------
 📬 Contact
 
