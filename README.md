@@ -3,7 +3,7 @@ PRODIGY_FS_03
 
 A responsive e-commerce web application prototype built with HTML, CSS, and JavaScript.
 This project showcases core shopping features like user authentication, product browsing, cart management, user profile, and an admin dashboard.
-
+----------------------------------------------------------------------------------------------------------------------------------------------------
 🚀 Features
 
 ✨ Front-end pages included:
@@ -23,7 +23,7 @@ Admin Panel (admin.html) – Admin dashboard (UI placeholder)
 About (about.html) – About the store
 
 Contact (contact.html) – Contact form and support information
-
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 💻 Built with:
 
 HTML5
@@ -33,11 +33,7 @@ CSS3
 JavaScript
 
 📱 Fully responsive and interactive UI using vanilla JavaScript.
-
-🎨 Screenshots
-
-Add screenshots here if you want visuals.
-
+---------------------------------------------------------------------------------------------------------------------------------------------------
 📁 Project Structure
 PRODIGY_FS_03/
 ├── css/                # Stylesheets
@@ -51,7 +47,7 @@ PRODIGY_FS_03/
 ├── about.html          # About us page
 ├── contact.html        # Contact us page
 └── README.md           # This file
-
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 🛠️ How to Use
 
 Clone the repository
@@ -72,14 +68,14 @@ Use the navigation links to visit different parts of the app like Cart, Profile,
 This project uses only vanilla front-end technologies — no external dependencies.
 
 If you use any libraries (e.g., Bootstrap, jQuery), document them here.
-
+----------------------------------------------------------------------------------------------------------------------------------------
 📌 Future Enhancements
 
 ✅ Connect with a back-end API for dynamic content
 ✅ Add user authentication & session management
 ✅ Integrate product database
 ✅ Implement checkout & payment flow
-
+--------------------------------------------------------------------------------------------------------------------------------------------
 📬 Contact
 
 If you have questions or want to collaborate:
