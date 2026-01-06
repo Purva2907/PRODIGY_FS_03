@@ -8,6 +8,7 @@ This project showcases core shopping features like user authentication, product 
 
 ✨ Front-end pages included:
 
+
 Home Page (index.html) – Landing page with featured products and navigation
 
 Login & Signup (login.html) – User authentication UI
@@ -23,6 +24,7 @@ Admin Panel (admin.html) – Admin dashboard (UI placeholder)
 About (about.html) – About the store
 
 Contact (contact.html) – Contact form and support information
+
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 💻 Built with:
 
@@ -33,8 +35,9 @@ CSS3
 JavaScript
 
 📱 Fully responsive and interactive UI using vanilla JavaScript.
----------------------------------------------------------------------------------------------------------------------------------------------------
+
 📁 Project Structure
+```
 PRODIGY_FS_03/
 ├── css/                # Stylesheets
 ├── js/                 # JavaScript functionality
@@ -47,12 +50,13 @@ PRODIGY_FS_03/
 ├── about.html          # About us page
 ├── contact.html        # Contact us page
 └── README.md           # This file
+```
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 🛠️ How to Use
 
 Clone the repository
 
-git clone https://github.com/Purva2907/PRODIGY_FS_03.git
+```git clone https://github.com/Purva2907/PRODIGY_FS_03.git```
 
 
 Open the project
